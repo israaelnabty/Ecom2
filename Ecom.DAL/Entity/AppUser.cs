@@ -3,16 +3,16 @@ namespace Ecom.DAL.Entity
 {
     public class AppUser : IdentityUser
     {
-
-        public string? Username { get; private set; }
-        public string? Email { get; private set; }
-        public string? PasswordHash { get; private set; }
-        public string? Role { get; private set; } // e.g., "Admin", "Customer"
-
-        public bool IsActive { get; private set; }
+        // IdentityUser provide: Email, Password, PhoneNumber, Role management
+        public string? DisplayName { get; private set; }
+        public string? ProfileImageUrl { get; private set; }
+        public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
+        public DateTime? DeletedOn { get; private set; }
+        public string? DeletedBy { get; private set; }
         public DateTime? UpdatedOn { get; private set; }
         public string? UpdatedBy { get; private set; }
+        public bool IsDeleted { get; private set; }
 
         // Navigation Properties
         public virtual ICollection<Address>? Addresses { get; private set; }
@@ -21,26 +21,32 @@ namespace Ecom.DAL.Entity
 
         // Logic
         public AppUser() { }
-
-        public AppUser(string username, string email, string passwordHash, string role)
+        public AppUser(string userName, string email, string displayName, string profileImageUrl, string createdBy,
+            )
         {
-            Username = username;
-            Email = email;
-            PasswordHash = passwordHash;
-            Role = role;
-            IsActive = true;
             CreatedOn = DateTime.UtcNow;
+            IsDeleted = false;
         }
 
-        public bool Update(string username, string email, string role, string userModified)
+        public bool Update(string displayName, string profileImageUrl, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
-                Username = username;
-                Email = email;
-                Role = role;
+                DisplayName = displayName;
+                ProfileImageUrl = profileImageUrl;
                 UpdatedOn = DateTime.UtcNow;
                 UpdatedBy = userModified;
+                return true;
+            }
+            return false;
+        }
+        public bool ToggleDelete(string userModified)
+        {
+            if (!string.IsNullOrEmpty(userModified))
+            {
+                IsDeleted = !IsDeleted;
+                DeletedOn = DateTime.UtcNow;
+                DeletedBy = userModified;
                 return true;
             }
             return false;

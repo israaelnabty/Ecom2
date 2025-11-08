@@ -11,6 +11,7 @@ namespace Ecom.DAL.Entity
         public decimal DiscountPercentage { get; private set; }
         public decimal Rating { get; private set; }
         public int Stock { get; private set; }
+        public int QuantitySold { get; private set; }
         public string? ThumbnailUrl { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
@@ -37,7 +38,7 @@ namespace Ecom.DAL.Entity
         // Logic
         public Product() { }
         public Product(string title, string description, decimal price, decimal discountPercentage, int stock,
-            string thumbnailUrl, string createdBy, int brandId, int categoryId)
+            string thumbnailUrl, string createdBy, int brandId, int categoryId, int quantitySold)
         {
             Title = title;
             Description = description;
@@ -50,10 +51,11 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
             BrandId = brandId;
             CategoryId = categoryId;
+            QuantitySold = quantitySold;
         }
 
-        public bool Update(string title, string description, decimal price, decimal discountPercentage, int stock,
-            string thumbnailUrl, string userModified, int brandId, int categoryId)
+        public bool Update(string? title, string description, decimal price, decimal discountPercentage, int stock,
+            string thumbnailUrl, string userModified, int brandId, int categoryId, int quantitySold)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
@@ -67,6 +69,7 @@ namespace Ecom.DAL.Entity
                 CategoryId = categoryId;
                 UpdatedOn = DateTime.UtcNow;
                 UpdatedBy = userModified;
+                QuantitySold = quantitySold;
                 return true;
             }
             return false;
