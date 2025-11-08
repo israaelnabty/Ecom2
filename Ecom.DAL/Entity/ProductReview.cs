@@ -21,7 +21,7 @@ namespace Ecom.DAL.Entity
         public int ProductId { get; private set; }
 
         [ForeignKey("AppUser")]
-        public int AppUserId { get; private set; }
+        public string AppUserId { get; private set; }
 
         // Navigation Properties
         public virtual Product? Product { get; private set; }
@@ -30,7 +30,7 @@ namespace Ecom.DAL.Entity
         // Logic
         public ProductReview() { }
         public ProductReview(string title, string description, decimal rating, string createdBy, int productId,
-            int appUserId)
+            string appUserId)
         {
             Title = title;
             Description = description;

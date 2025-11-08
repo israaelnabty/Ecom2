@@ -15,7 +15,7 @@ namespace Ecom.DAL.Entity
 
         // Foriegn Keys
         [ForeignKey("AppUser")]
-        public int AppUserId { get; private set; }
+        public string AppUserId { get; private set; }
 
         [ForeignKey("Product")]
         public int ProductId { get; private set; }
@@ -26,7 +26,7 @@ namespace Ecom.DAL.Entity
 
         // Logic
         public WishlistItem() { }
-        public WishlistItem(int appUserId, int productId, string createdBy)
+        public WishlistItem(string appUserId, int productId, string createdBy)
         {
             AppUserId = appUserId;
             ProductId = productId;
@@ -35,7 +35,7 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(int appUserId, int productId, string userModified)
+        public bool Update(string appUserId, int productId, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {

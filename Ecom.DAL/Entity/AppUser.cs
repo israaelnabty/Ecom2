@@ -21,7 +21,7 @@ namespace Ecom.DAL.Entity
 
         // Logic
         public AppUser() { }
-        public AppUser(string userName, string email, string displayName, string profileImageUrl, string createdBy,
+        public AppUser(string email, string displayName, string profileImageUrl, string createdBy, 
             )
         {
             CreatedOn = DateTime.UtcNow;

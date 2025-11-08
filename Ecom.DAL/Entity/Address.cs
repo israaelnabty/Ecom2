@@ -19,7 +19,7 @@ namespace Ecom.DAL.Entity
 
         // Foriegn Keys
         [ForeignKey("AppUser")]
-        public int AppUserId { get; private set; }
+        public string? AppUserId { get; private set; }
 
         // Navigation Properties
         public virtual AppUser? AppUser { get; private set; }
@@ -27,7 +27,7 @@ namespace Ecom.DAL.Entity
         // Logic
         public Address() { }
         public Address(string street, string city, string country, string postalCode, string createdBy,
-            int appUserId)
+            string appUserId)
         {
             Street = street;
             City = city;
@@ -40,7 +40,7 @@ namespace Ecom.DAL.Entity
         }
 
         public bool Update(string street, string city, string country, string postalCode,
-            int appUserId, string userModified)
+            string appUserId, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
