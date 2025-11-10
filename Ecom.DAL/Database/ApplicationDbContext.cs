@@ -25,6 +25,8 @@ namespace Ecom.DAL.Database
         public DbSet<ProductImageUrl> ProductImageUrls { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
 
+        public DbSet<Brand> Brands { get; set; }
+
 
     }
 }
