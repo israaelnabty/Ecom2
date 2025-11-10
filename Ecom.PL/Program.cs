@@ -6,7 +6,7 @@ namespace Ecom.PL
 {
     public class Program
     {
-        public static async void Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +45,7 @@ namespace Ecom.PL
 
             var app = builder.Build();
 
-            // Run your seeder here
+            //Run your seeder here
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -54,7 +54,7 @@ namespace Ecom.PL
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     // This one line creates the DB and seeds it
-                    await DbSeeder.SeedAsync(context, userManager);
+                    DbSeeder.Seed(context, userManager);
                 }
                 catch (Exception ex)
                 {

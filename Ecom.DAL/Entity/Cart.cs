@@ -15,7 +15,7 @@ namespace Ecom.DAL.Entity
             .Sum(i => i.TotalPrice) ?? 0;
 
         // Foriegn Keys
-        public string AppUserId { get; private set; }
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
         public virtual AppUser AppUser { get; private set; } = null!;

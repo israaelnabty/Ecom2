@@ -5,21 +5,7 @@ namespace Ecom.DAL.Common
     {
         public static IServiceCollection AddBusinessInDAL(this IServiceCollection services)
         {
-            // Add Identity service with cookie, later will be changed for JWT
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/Login");
-
-                    // Cookie settings, added for security
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                });
-
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 // SignIn settings
                 options.SignIn.RequireConfirmedAccount = true;
@@ -41,8 +27,26 @@ namespace Ecom.DAL.Common
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders(); // Add all default token providers
+                .AddDefaultTokenProviders() // Add all default token providers
+                .AddSignInManager<SignInManager<AppUser>>();
                 //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
+
+
+            // Add Identity service with cookie, later will be changed for JWT
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/Login");
+
+                    // Cookie settings, added for security
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                });
+
+            
 
             return services;
         }
