@@ -3,12 +3,11 @@ namespace Ecom.DAL.Entity
 {
     public class Address
     {
-        [Key]
         public int Id { get; private set; }
-        public string? Street { get; private set; }
-        public string? City { get; private set; }
-        public string? Country { get; private set; }
-        public string? PostalCode { get; private set; }
+        public string Street { get; private set; } = null!;
+        public string City { get; private set; } = null!;
+        public string Country { get; private set; } = null!;
+        public string PostalCode { get; private set; } = null!;
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; }
         public DateTime? DeletedOn { get; private set; }
@@ -18,11 +17,10 @@ namespace Ecom.DAL.Entity
         public bool IsDeleted { get; private set; }
 
         // Foriegn Keys
-        [ForeignKey("AppUser")]
-        public string? AppUserId { get; private set; }
+        public string AppUserId { get; private set; } = null!;
 
         // Navigation Properties
-        public virtual AppUser? AppUser { get; private set; }
+        public virtual AppUser AppUser { get; private set; } = null!;
 
         // Logic
         public Address() { }
@@ -39,8 +37,7 @@ namespace Ecom.DAL.Entity
             AppUserId = appUserId;
         }
 
-        public bool Update(string street, string city, string country, string postalCode,
-            string appUserId, string userModified)
+        public bool Update(string street, string city, string country, string postalCode, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
@@ -48,7 +45,6 @@ namespace Ecom.DAL.Entity
                 City = city;
                 Country = country;
                 PostalCode = postalCode;
-                AppUserId = appUserId;
                 UpdatedOn = DateTime.UtcNow;
                 UpdatedBy = userModified;
                 return true;

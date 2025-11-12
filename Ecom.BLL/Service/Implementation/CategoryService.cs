@@ -26,9 +26,12 @@ namespace Ecom.BLL.Service.Implementation
                 // Else set to default image
                 if (model.Image != null)
                 {
-                    model.ImageUrl = await Upload.UploadFileAsync("File", model.Image);
+                    model.ImageUrl = await Upload.UploadFileAsync("File/CategoryImages", model.Image);
                 }
-                else model.ImageUrl = "default-category.png";
+                else if (string.IsNullOrWhiteSpace(model.ImageUrl))
+                {
+                    model.ImageUrl = "default-category.png";
+                }
 
                 // mapping ViewModel to Entity
                 var category = _mapper.Map<Category>(model);
@@ -49,11 +52,27 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        public Task<ResponseResult<bool>> DeleteAsync(DeleteCategoryVM model)
+        // Delete Category (Soft Delete)
+        public async Task<ResponseResult<bool>> DeleteAsync(DeleteCategoryVM model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Toggling the IsDeleted status of the category
+                bool isDeleted = await _categoryRepo.ToggleDeleteAsync(model.Id, model.DeletedBy);
+                if (isDeleted)
+                {
+                    return new ResponseResult<bool>(true, "Category deletion status toggled successfully", true);
+                }
+                return new ResponseResult<bool>(false, "Failed to toggle category deletion status", false);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
+        // Get All Categories
         public async Task<ResponseResult<IEnumerable<GetCategoryVM>>> GetAllAsync()
         {
             try
@@ -74,6 +93,7 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+        // Get Category by Id
         public async Task<ResponseResult<GetCategoryVM>> GetByIdAsync(int id)
         {
             try
@@ -104,14 +124,62 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        public Task<ResponseResult<bool>> ToggleDeleteAsync(int id, string userModified)
+        // Hard Delete Category
+        public async Task<ResponseResult<bool>> HardDeleteAsync(DeleteCategoryVM model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Permanently deleting the category from database
+                bool isDeleted = await _categoryRepo.HardDeleteAsync(model.Id);
+                if (isDeleted)
+                {
+                    return new ResponseResult<bool>(true, "Category hard deleted successfully", true);
+                }
+                return new ResponseResult<bool>(false, "Failed to hard delete category", false);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<ResponseResult<bool>> UpdateAsync(UpdateCategoryVM model)
+        // Update Category
+        public async Task<ResponseResult<bool>> UpdateAsync(UpdateCategoryVM model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Checking if the category exists
+                var existing = await _categoryRepo.GetByIdAsync(model.Id);
+                if (existing == null)
+                {
+                    return new ResponseResult<bool>(false, "Category not found", false);
+                }
+
+                // Uploading Image to the Server
+                // If an image is uploaded, get the URL 
+                // Else keep the existing image URL
+                if (model.Image != null)
+                {
+                    model.ImageUrl = await Upload.UploadFileAsync("File/CategoryImages", model.Image);
+                }
+
+                // mapping ViewModel to Entity
+                var category = _mapper.Map<Category>(model);
+
+                // Updating Category in Database
+                bool isUpdated = await _categoryRepo.UpdateAsync(category);
+                if (isUpdated)
+                {
+                    return new ResponseResult<bool>(true, "Category updated successfully", true);
+                }
+                return new ResponseResult<bool>(false, "Failed to update category", false);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

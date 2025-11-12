@@ -36,7 +36,7 @@ namespace Ecom.DAL.Repo.Implementation
         // Delete an Existing Category
         // Returns true if Delete is successful, otherwise false
         // Throws exception if an error occurs
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> HardDeleteAsync(int id)
         {
             try
             {
@@ -99,6 +99,7 @@ namespace Ecom.DAL.Repo.Implementation
                 throw;
             }
         }
+
         // Toggle the deletion status of a Category
         // Returns true if the operation is successful, otherwise false
         // Throws exception if an error occurs
@@ -152,6 +153,21 @@ namespace Ecom.DAL.Repo.Implementation
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        // Check if a Category exists by its name
+        // Returns true if exists, otherwise false
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            try
+            {
+                return await _db.Categories.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

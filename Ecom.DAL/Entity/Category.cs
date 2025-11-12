@@ -3,10 +3,8 @@ namespace Ecom.DAL.Entity
 {
     public class Category
     {
-        [Key]
         public int Id { get; private set; }
-        [Required, MaxLength(50)]
-        public string Name { get; private set; } = string.Empty;
+        public string? Name { get; private set; }
         public string? ImageUrl { get; private set; }
         public string? CreatedBy { get; private set; }
         public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
@@ -21,7 +19,7 @@ namespace Ecom.DAL.Entity
 
         // Logic
         public Category() { }
-        public Category(string name, string imageUrl, string createdBy)
+        public Category(string name, string? imageUrl, string createdBy)
         {
             Name = name;
             ImageUrl = imageUrl;
@@ -30,7 +28,7 @@ namespace Ecom.DAL.Entity
             IsDeleted = false;
         }
 
-        public bool Update(string name, string imageUrl, string userModified)
+        public bool Update(string name, string? imageUrl, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
