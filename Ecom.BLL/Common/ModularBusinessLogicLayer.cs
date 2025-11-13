@@ -1,4 +1,6 @@
 ﻿
+
+
 namespace Ecom.BLL.Common
 {
     public static class ModularBusinessLogicLayer
