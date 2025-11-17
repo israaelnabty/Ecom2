@@ -87,7 +87,10 @@ namespace Ecom.DAL.Repo.Implementation
         {
             try
             {
-                var category = await _db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+                // Include Products to avoid FK constraint issues
+                var category = await _db.Categories
+                                        .Include(c => c.Products)
+                                        .FirstOrDefaultAsync(c => c.Id == id);
                 if(category != null)
                 {
                     return category;

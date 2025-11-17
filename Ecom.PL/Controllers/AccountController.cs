@@ -14,40 +14,40 @@ namespace Ecom.PL.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Register()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Register()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterAppUserVM model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new AppUser(model.Name, model.Salary, 20, string.Empty, 1, "Fady")
-                {
-                    UserName = model.UserName
-                };
+        //[HttpPost]
+        //public async Task<IActionResult> Register(RegisterAppUserVM model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = new AppUser(model.Name, model.Salary, 20, string.Empty, 1, "Fady")
+        //        {
+        //            UserName = model.UserName
+        //        };
 
-                var result = await _userManager.CreateAsync(user, model.Password);
-                await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Login");
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-            }
-            return View(model);
-        }
+        //        var result = await _userManager.CreateAsync(user, model.Password);
+        //        await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+        //        if (result.Succeeded)
+        //        {
+        //            return RedirectToAction("Login");
+        //        }
+        //        foreach (var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.Description);
+        //        }
+        //    }
+        //    return View(model);
+        //}
 
-        [Authorize]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        //[Authorize]
+        //public IActionResult Index()
+        //{
+        //    return View();
+        //}
     }
 }

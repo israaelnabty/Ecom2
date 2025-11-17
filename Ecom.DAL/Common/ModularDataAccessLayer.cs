@@ -51,6 +51,10 @@ namespace Ecom.DAL.Common
             services.AddScoped<IProductImageUrlRepo, ProductImageUrlRepo>();
             services.AddScoped<IBrandRepo, BrandRepo>();
             services.AddScoped<IAccountRepo, AccountRepo>();
+
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<ICartItemRepo, CartItemRepo>();
+            services.AddScoped<ICartRepo, CartRepo>();
             return services;
         }
     }
