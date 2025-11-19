@@ -28,25 +28,14 @@ namespace Ecom.DAL.Common
                 // User settings
                 options.User.RequireUniqueEmail = true;
             })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders() // Add all default token providers
                 .AddSignInManager<SignInManager<AppUser>>();
                 //.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 
 
-            // Add Identity service with cookie, later will be changed for JWT
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.LoginPath = new PathString("/Account/Login");
-                    options.AccessDeniedPath = new PathString("/Account/Login");
-
-                    // Cookie settings, added for security
-                    options.Cookie.HttpOnly = true;
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                });
+            
 
             services.AddScoped<IProductImageUrlRepo, ProductImageUrlRepo>();
             services.AddScoped<IBrandRepo, BrandRepo>();
@@ -54,6 +43,10 @@ namespace Ecom.DAL.Common
 
 
             services.AddScoped<IAccountRepo, AccountRepo>();
+
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<ICartItemRepo, CartItemRepo>();
+            services.AddScoped<ICartRepo, CartRepo>();
             return services;
         }
     }
