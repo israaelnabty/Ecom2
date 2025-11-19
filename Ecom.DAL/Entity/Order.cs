@@ -30,7 +30,7 @@ namespace Ecom.DAL.Entity
             OrderItems = new List<OrderItem>();
         }
 
-        public Order(string appUserId, DateTime deliveryDate, string shippingAddress,string createdBy)
+        public Order(string appUserId, DateTime deliveryDate, string shippingAddress,string createdBy ,List<OrderItem> Items)
         {
             AppUserId = appUserId;
             Status = OrderStatus.Pending;
@@ -40,18 +40,19 @@ namespace Ecom.DAL.Entity
             CreatedOn = DateTime.UtcNow;
             IsDeleted = false;
             TotalAmount = 0;
-            OrderItems = new List<OrderItem>();
+            OrderItems = Items;
             OrderNumber = $"ORD-{Guid.NewGuid().ToString()[..8].ToUpper()}"; 
         }
 
-        public bool Update(OrderStatus orderStatus, string userModified, string? trackingNumber)
+        public bool Update(OrderStatus orderStatus, string userModified)
         {
             if (!string.IsNullOrEmpty(userModified))
             {
                 Status = orderStatus;
                 UpdatedBy = userModified;
                 UpdatedOn = DateTime.UtcNow;
-                TrackingNumber = trackingNumber;
+                if (string.IsNullOrEmpty(TrackingNumber) && orderStatus == OrderStatus.Shipped)
+                    TrackingNumber = $"ORD-{Guid.NewGuid().ToString()[..8].ToUpper()}";
                 return true;
             }
             return false;

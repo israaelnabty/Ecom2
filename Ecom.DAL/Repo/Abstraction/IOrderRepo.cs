@@ -11,17 +11,18 @@ namespace Ecom.DAL.Repo.Abstraction
         Task<Order?> GetByIdAsync(int id);
         Task<Order?> GetByOrderNumberAsync(string orderNumber);
         Task<IEnumerable<Order>> GetAllAsync(Expression<Func<Order, bool>>? filter = null);
+        Task<IEnumerable<Order>> GetByUserIdAsync(string appUserId);
+        Task<Order?> GetWithItemsAsync(int id);
 
         Task AddAsync(Order order);
-        Task UpdateAsync(Order order);
+        Task UpdateAsync(int id, string UpdatedBy,OrderStatus orderStatus);
         Task DeleteAsync(int Id, string deletedBy);
 
         Task<int> SaveChangesAsync();
 
 
         // for next Iterations
-        /*Task<IEnumerable<Order>> GetByUserIdAsync(string appUserId);
-        Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
+        /*Task<IEnumerable<Order>> GetByStatusAsync(OrderStatus status);
 
         // Search & filtering (optional)
         Task<IEnumerable<Order>> FilterAsync(
@@ -33,7 +34,6 @@ namespace Ecom.DAL.Repo.Abstraction
 
 
         // Includes (navigation loading)
-        Task<Order?> GetWithItemsAsync(int id);
         Task<Order?> GetDetailedAsync(int id);  
         // (Items + User + Payment)*/
     }

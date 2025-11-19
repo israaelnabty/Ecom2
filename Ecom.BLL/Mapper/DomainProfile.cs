@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 
 using Ecom.BLL.ModelVM.Order;
 using Ecom.BLL.ModelVM.OrderItem;
+using Ecom.BLL.ModelVM.CartItem;
 
 namespace Ecom.BLL.Mapper
 {
@@ -146,6 +147,15 @@ namespace Ecom.BLL.Mapper
 
             CreateMap<UpdateOrderVM, Order>()
            .ForAllMembers(opt => opt.Ignore());
+
+            // for mapping GetCartItemVM to GetOrderItemVM
+            CreateMap<GetCartItemVM, OrderItem>()
+            .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+            .ForMember(dest => dest.ProductTitle, opt => opt.MapFrom(src => src.ProductName))
+            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity))
+            .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice))
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice));
+
 
         }
 

@@ -48,15 +48,31 @@ namespace Ecom.DAL.Repo.Implementation
             return await _context.Orders.FirstOrDefaultAsync(o => o.OrderNumber == orderNumber);
         }
 
+        public async Task<Order?> GetWithItemsAsync(int id)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
+        public async Task<IEnumerable<Order>> GetByUserIdAsync(string appUserId)
+        {
+            return await _context.Orders.Where(o => o.AppUserId == appUserId).ToListAsync();
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Order order)
+        public async Task UpdateAsync(int id,string userId, OrderStatus orderStatus)
         {
-            _context.Orders.Update(order);
+            var Order = await _context.Orders.FindAsync(id);
+            if (Order != null) {
+                Order.Update(orderStatus, userId);
+                _context.Orders.Update(Order);
+            }
             await Task.CompletedTask;
         }
+
     }
 }
