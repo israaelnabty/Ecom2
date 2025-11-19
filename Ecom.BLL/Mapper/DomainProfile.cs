@@ -1,4 +1,10 @@
 ﻿
+using Ecom.BLL.ModelVM.Cart;
+using Ecom.BLL.ModelVM.Category;
+using Ecom.DAL.Entity;
+
+using Microsoft.Data.SqlClient;
+
 using Ecom.BLL.ModelVM.Order;
 using Ecom.BLL.ModelVM.OrderItem;
 
@@ -8,6 +14,39 @@ namespace Ecom.BLL.Mapper
     {
         public DomainProfile()
         {
+            // ----------------------------------------
+            // ## Category Mappings
+            // ----------------------------------------
+            // Category <-> CreateCategoryVM
+            CreateMap<Category, AddCategoryVM>().ReverseMap();
+            // Category <-> UpdateCategoryVM
+            CreateMap<Category, UpdateCategoryVM>().ReverseMap();
+            // Category <-> GetCategoryVM
+            CreateMap<Category, GetCategoryVM>().ReverseMap()
+                .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Products));
+            // Category <-> DeleteCategoryVM
+            CreateMap<Category, DeleteCategoryVM>().ReverseMap();
+            // ----------------------------------------
+            // ## End Category Mappings
+            // ----------------------------------------
+
+            // ----------------------------------------
+            // ## Cart Mappings
+            // ----------------------------------------
+            // Cart <-> GetCartVM
+            CreateMap<Cart, GetCartVM>().ReverseMap()
+                .ForMember(dest => dest.CartItems, opt => opt.MapFrom(src => src.CartItems));
+            // Cart <-> UpdateCartVM
+            CreateMap<Cart, UpdateCartVM>().ReverseMap();
+            // Cart <-> AddCartVM
+            CreateMap<Cart, AddCartVM>().ReverseMap();
+            // Cart <-> DeleteCartVM
+            CreateMap<Cart, DeleteCartVM>().ReverseMap();
+            // ----------------------------------------
+            // ## End Cart Mappings
+            // ----------------------------------------
+
+
 
 
             CreateMap<ProductImageUrl, GetProductImageUrlVM>()
@@ -41,6 +80,29 @@ namespace Ecom.BLL.Mapper
                 .ForMember(dest => dest.Name, opt => opt.Ignore())
                 .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
                 .ReverseMap();
+
+
+            // User Mappings
+            // Maps from the RegisterUserVM to the AppUser entity
+            CreateMap<RegisterUserVM, AppUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(_ => false));
+
+            // Maps from the AppUser entity to the GetUserVM
+            CreateMap<AppUser, GetUserVM>();
+
+            // 3. Map for Updating (Special Case)
+            // This tells AutoMapper how to apply an UpdateDto *onto* an
+            // existing AppUser object, ignoring any null values from the DTO.
+            CreateMap<UpdateUserVM, AppUser>()
+                .ForMember(dest => dest.UpdatedOn, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.Email, opt => opt.Ignore())
+                .ForMember(dest => dest.UserName, opt => opt.Ignore())
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                
+
 
             // Order And OrderItem
             CreateMap<Order, GetOrderVM>()
