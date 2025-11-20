@@ -45,7 +45,7 @@ namespace Ecom.PL
 
             var app = builder.Build();
 
-            //Run your seeder here
+            // Run your seeder here
             //using (var scope = app.Services.CreateScope())
             //{
             //    var services = scope.ServiceProvider;
@@ -68,14 +68,16 @@ namespace Ecom.PL
 
             //        // Use UserManager to create the user, which handles hashing
             //        userManager.CreateAsync(adminUser, "Admin@123").Wait();
-                    
 
+            //        roleManager.CreateAsync(new IdentityRole("Admin")).Wait();
+            //        roleManager.CreateAsync(new IdentityRole("Customer")).Wait();
             //        // Add the new user to the "Admin" role
             //        userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+            //        userManager.AddToRoleAsync(adminUser, "Customer").Wait();
             //    }
-            //        // This one line creates the DB and seeds it
-            //        //DbSeeder.Seed(context, userManager);
-                
+            //    // This one line creates the DB and seeds it
+            //    //DbSeeder.Seed(context, userManager);
+
             //    catch (Exception ex)
             //    {
             //        var logger = services.GetRequiredService<ILogger<Program>>();

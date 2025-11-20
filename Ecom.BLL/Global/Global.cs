@@ -24,3 +24,7 @@ global using Microsoft.AspNetCore.Authentication.Cookies;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Ecom.BLL.ModelVM.Role;
 global using System.Data;
+global using Ecom.BLL.ModelVM.Cart;
+global using Ecom.BLL.ModelVM.CartItem;
+global using Ecom.BLL.ModelVM.Category;
+global using Ecom.BLL.ModelVM.Payment;

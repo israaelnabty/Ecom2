@@ -1,4 +1,6 @@
 ﻿
+using Ecom.BLL.ModelVM.Cart;
+
 namespace Ecom.BLL.Service.Implementation
 {
     public class AccountService : IAccountService
@@ -7,17 +9,20 @@ namespace Ecom.BLL.Service.Implementation
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
+        private readonly ICartService _cartService;
 
         public AccountService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IMapper mapper,
-            ITokenService tokenService)
+            ITokenService tokenService,
+            ICartService cartService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
             _tokenService = tokenService;
+            _cartService = cartService;
         }
 
         public async Task<ResponseResult<AuthResponseVM>> RegisterAsync(RegisterUserVM registerVM)
@@ -66,9 +71,19 @@ namespace Ecom.BLL.Service.Implementation
                     return new ResponseResult<AuthResponseVM>(null, errors, false);
                 }
 
-                // Here you should also call the cart service to create a cart for the user
+                //6- Call the cart service to create a cart for the new user
+                var addCartVM = new AddCartVM
+                {
+                    AppUserId = user.Id,
+                    CreatedBy = user.Email!
+                };
+                var createCartResult = await _cartService.AddAsync(addCartVM);
+                if (!createCartResult.IsSuccess)
+                {
+                    return new ResponseResult<AuthResponseVM>(null, "User created but failed to create cart: " + createCartResult.ErrorMessage, false);
+                }
 
-                //6- If successful, generate token, and return AuthResponseVM
+                //7- If successful, generate token, and return AuthResponseVM
                 var token = await _tokenService.CreateToken(user); // Generate JWT token
                 var userVM = _mapper.Map<GetUserVM>(user); // Map AppUser to GetUserVM
                 var authResponse = new AuthResponseVM // Create AuthresponseVM

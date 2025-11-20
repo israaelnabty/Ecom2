@@ -1,9 +1,7 @@
 ﻿
-using Microsoft.EntityFrameworkCore;
-
 namespace Ecom.DAL.Repo.Implementation
 {
-    public class PaymentRepo 
+    public class PaymentRepo : IPaymentRepo
     {
         private readonly ApplicationDbContext _context;
 
@@ -12,44 +10,64 @@ namespace Ecom.DAL.Repo.Implementation
             _context = context;
         }
 
-        //public async Task<IEnumerable<Payment>> GetAllAsync(Expression<Func<Payment, bool>>? Filter = null,
-        //    params Expression<Func<Payment, object>>[] includes)
-        //{
-        //    try
-        //    {
+        public async Task<IEnumerable<Payment>> GetAllAsync(Expression<Func<Payment, bool>>? filter = null,
+            params Expression<Func<Payment, object>>[] includes)
+        {
+            try
+            {
+                IQueryable<Payment> query = _context.Payments;
 
-        //    }
-        //    catch (Exception)
-        //    {
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
 
-        //        throw;
-        //    }
-        //}
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
 
-        //public async Task<Payment?> GetByIdAsync(int id)
-        //{
-        //    try
-        //    {
+                return await query.ToListAsync();
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    catch (Exception)
-        //    {
+                throw;
+            }
+        }
 
-        //        throw;
-        //    }
-        //}
+        public async Task<Payment?> GetByIdAsync(int id)
+        {
+            try
+            {
+                var payment = await _context.Payments.Include(p => p.Order)
+                    .FirstOrDefaultAsync(p => p.Id == id);
+                if (payment != null)
+                {
+                    return payment;
+                }
+
+                throw new KeyNotFoundException($"Payment with Id {id} not found.");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<Payment?> GetByOrderIdAsync(int orderId)
         {
             try
             {
-                if (orderId <= 0)
-                {
-                    return null;
-                }
                 var payment = await _context.Payments.Include(p => p.Order)
                     .FirstOrDefaultAsync(p => p.OrderId == orderId);
-                return payment;
+                if (payment != null)
+                {
+                    return payment;
+                }
+
+                throw new KeyNotFoundException($"Payment with orderId {orderId} not found.");
             }
             catch (Exception)
             {
@@ -76,31 +94,60 @@ namespace Ecom.DAL.Repo.Implementation
                 throw;
             }
         }
-        //public async Task<bool> UpdateAsync(Payment payment)
-        //{
-        //    try
-        //    {
 
-        //    }
-        //    catch (Exception)
-        //    {
+        public async Task<bool> UpdateAsync(Payment newPayment)
+        {
+            try
+            {
+                if (newPayment == null)
+                {
+                    return false;
+                }
 
-        //        throw;
-        //    }
-        //}
+                var oldPayment = await _context.Payments.FindAsync(newPayment.Id);
+                if (oldPayment == null)
+                {
+                    return false;
+                }
 
-        //public async Task<bool> ToggleDeleteStatusAsync(int id, string userModified)
-        //{
-        //    try
-        //    {
+                bool result = oldPayment.Update(newPayment.TransactionId, newPayment.UpdatedBy!, newPayment.Status);
+                if (result)
+                {
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    catch (Exception)
-        //    {
+                throw;
+            }
+        }
 
-        //        throw;
-        //    }
-        //}
-        
+        public async Task<bool> ToggleDeleteStatusAsync(int id, string userModified)
+        {
+            try
+            {
+                var payment = await _context.Payments.FindAsync(id);
+                if (payment == null)
+                {
+                    return false;
+                }
+                bool result = payment.ToggleDelete(userModified);
+                if (result)
+                {
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

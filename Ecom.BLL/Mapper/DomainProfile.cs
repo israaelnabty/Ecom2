@@ -1,11 +1,4 @@
 ﻿
-using Ecom.BLL.ModelVM.Cart;
-using Ecom.BLL.ModelVM.CartItem;
-using Ecom.BLL.ModelVM.Category;
-using Ecom.DAL.Entity;
-
-using Microsoft.Data.SqlClient;
-
 namespace Ecom.BLL.Mapper
 {
     public class DomainProfile : Profile
@@ -106,10 +99,11 @@ namespace Ecom.BLL.Mapper
             // User Mappings
             // Maps from the RegisterUserVM to the AppUser entity
             CreateMap<RegisterUserVM, AppUser>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.CreatedOn, opt => opt.MapFrom(_ => DateTime.UtcNow))
-                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(_ => false));
+                .ConstructUsing(vm => new AppUser(vm.Email!,
+                                              vm.DisplayName,
+                                              vm.ProfileImageUrl,
+                                              vm.Email!,
+                                              vm.PhoneNumber));
 
             // Maps from the AppUser entity to the GetUserVM
             CreateMap<AppUser, GetUserVM>();
@@ -126,7 +120,9 @@ namespace Ecom.BLL.Mapper
             // Role Mappings
             CreateMap<IdentityRole, RoleVM>().ReverseMap();
 
-
+            // Payment Mappings
+            CreateMap<CreatePaymentVM, Payment>()
+                .ConstructUsing(vm => new Payment(vm.OrderId, vm.TotalAmount, vm.PaymentMethod, null, vm.CreatedBy!));
         }
 
     }

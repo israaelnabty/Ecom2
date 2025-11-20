@@ -44,6 +44,7 @@ namespace Ecom.DAL.Common
             services.AddScoped<ICategoryRepo, CategoryRepo>();
             services.AddScoped<ICartItemRepo, CartItemRepo>();
             services.AddScoped<ICartRepo, CartRepo>();
+            services.AddScoped<IPaymentRepo, PaymentRepo>();
             return services;
         }
     }
