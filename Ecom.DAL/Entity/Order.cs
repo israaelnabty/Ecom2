@@ -52,7 +52,7 @@ namespace Ecom.DAL.Entity
                 UpdatedBy = userModified;
                 UpdatedOn = DateTime.UtcNow;
                 if (string.IsNullOrEmpty(TrackingNumber) && orderStatus == OrderStatus.Shipped)
-                    TrackingNumber = $"ORD-{Guid.NewGuid().ToString()[..8].ToUpper()}";
+                    TrackingNumber = $"TRK-{Guid.NewGuid().ToString()[..8].ToUpper()}";
                 return true;
             }
             return false;
