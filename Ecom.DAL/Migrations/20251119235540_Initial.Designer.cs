@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecom.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:Ecom.DAL/Migrations/20251119235540_Initial.Designer.cs
     [Migration("20251119235540_Initial")]
     partial class Initial
+========
+    [Migration("20251120133438_initial")]
+    partial class initial
+>>>>>>>> 2deb5c19b997627b3ce1dab8c5a6037f9451f406:Ecom.DAL/Migrations/20251120133438_initial.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecom.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251113204023_InitialDB")]
-    partial class InitialDB
+<<<<<<<< HEAD:Ecom.DAL/Migrations/20251119235540_Initial.Designer.cs
+    [Migration("20251119235540_Initial")]
+    partial class Initial
+========
+    [Migration("20251120133438_initial")]
+    partial class initial
+>>>>>>>> 2deb5c19b997627b3ce1dab8c5a6037f9451f406:Ecom.DAL/Migrations/20251120133438_initial.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +66,7 @@ namespace Ecom.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
@@ -231,6 +237,9 @@ namespace Ecom.DAL.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeletedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -328,7 +337,6 @@ namespace Ecom.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -695,6 +703,12 @@ namespace Ecom.DAL.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
