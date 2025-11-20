@@ -1,10 +1,11 @@
-﻿using Ecom.BLL.ModelVM.Cart;
+using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.CartItem;
 using Ecom.BLL.ModelVM.Category;
 using Ecom.DAL.Entity;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity; // Added based on usage of IdentityRole
 using Ecom.BLL.ModelVM.Product;
 using Ecom.BLL.ModelVM.ProductReview;
+using AutoMapper; // Required for Profile
 
 namespace Ecom.BLL.Mapper
 {
@@ -19,7 +20,9 @@ namespace Ecom.BLL.Mapper
                 .ConstructUsing(vm => new Category(vm.Name!, vm.ImageUrl!, vm.CreatedBy!));
 
             CreateMap<Category, UpdateCategoryVM>().ReverseMap();
+            
             CreateMap<Category, GetCategoryVM>().ReverseMap();
+            
             CreateMap<Category, DeleteCategoryVM>().ReverseMap();
             // ----------------------------------------
 
