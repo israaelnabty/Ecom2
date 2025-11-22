@@ -1,8 +1,10 @@
-﻿namespace Ecom.PL.Controllers
+﻿
+namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WishlistItemController : ControllerBase
+    [Authorize]
+    public class WishlistItemController : BaseApiController
     {
         private readonly IWishlistItemService _wishlistItemService;
 
@@ -12,6 +14,7 @@
         }
 
         // Get Operations
+        [Authorize(Roles = "Admin")]
         [HttpGet("WishlistItems")]
         public async Task<IActionResult> GetAll([FromQuery] string? name = null, 
             [FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
@@ -20,7 +23,7 @@
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data                
+                return Ok(result.Result); // 200 with data                
             }
             return NotFound(result.ErrorMessage); // 404
         }
@@ -32,7 +35,7 @@
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data
+                return Ok(result.Result); // 200 with data
             }
             return NotFound(result.ErrorMessage); // 404            
         }
@@ -45,7 +48,7 @@
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data                
+                return Ok(result.Result); // 200 with data                
             }
             return NotFound(result.ErrorMessage); // 404
         }
@@ -56,8 +59,8 @@
         {
             if (ModelState.IsValid)
             {
-                //model.CreatedBy = "user"; //////
-                //model.AppUserId = "1"; //////
+                model.CreatedBy = CurrentUserId;
+                model.AppUserId = CurrentUserId;
 
                 var result = await _wishlistItemService.CreateAsync(model);
                 if (result.IsSuccess)

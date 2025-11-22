@@ -7,7 +7,7 @@ namespace Ecom.BLL.ModelVM.Address
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
         public string? PostalCode { get; set; }
-        public string AppUserId { get; set; } = null!;
-        public string CreatedBy { get; set; } = null!;
+        public string? AppUserId { get; set; } = null!;
+        public string? CreatedBy { get; set; } = null!;
     }
 }

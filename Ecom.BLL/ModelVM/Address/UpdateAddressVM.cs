@@ -8,6 +8,6 @@ namespace Ecom.BLL.ModelVM.Address
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
         public string? PostalCode { get; set; }
-        public string UpdatedBy { get; set; } = null!;
+        public string? UpdatedBy { get; set; } = null!;
     }
 }
