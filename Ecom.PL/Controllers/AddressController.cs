@@ -3,6 +3,7 @@ namespace Ecom.PL.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressController : BaseApiController
     {
         private readonly IAddressService _addressService;
@@ -13,6 +14,7 @@ namespace Ecom.PL.Controllers
         }
 
         // Get Operations
+        [Authorize(Roles = "Admin")]
         [HttpGet("Addresses")]
         public async Task<IActionResult> GetAll([FromQuery] int pageNum = 1, [FromQuery] int pageSize = 10)
         {
@@ -20,7 +22,7 @@ namespace Ecom.PL.Controllers
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data                
+                return Ok(result.Result); // 200 with data                
             }
             return NotFound(result.ErrorMessage); // 404
         }
@@ -32,7 +34,7 @@ namespace Ecom.PL.Controllers
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data
+                return Ok(result.Result); // 200 with data
             }
             return NotFound(result.ErrorMessage); // 404            
         }
@@ -45,7 +47,7 @@ namespace Ecom.PL.Controllers
 
             if (result.IsSuccess)
             {
-                return Ok(result); // 200 with data                
+                return Ok(result.Result); // 200 with data                
             }
             return NotFound(result.ErrorMessage); // 404
         }
@@ -56,8 +58,8 @@ namespace Ecom.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                //model.CreatedBy = "user"; //////
-                //model.AppUserId = "1"; //////
+                model.CreatedBy = CurrentUserId;
+                model.AppUserId = CurrentUserId;
 
                 var result = await _addressService.CreateAsync(model);
                 if (result.IsSuccess)
@@ -80,7 +82,7 @@ namespace Ecom.PL.Controllers
             }
             if (ModelState.IsValid)
             {
-                //model.UpdatedBy = "user"; //////
+                model.UpdatedBy = CurrentUserId;
 
                 var response = await _addressService.UpdateAsync(model);
                 if (response.IsSuccess)
@@ -107,7 +109,7 @@ namespace Ecom.PL.Controllers
             {
                 return NotFound();
             }
-            addressToBeDeleted.Result.DeletedBy = "user"; //////
+            addressToBeDeleted.Result.DeletedBy = CurrentUserId;
 
             var response = await _addressService.DeleteAsync(addressToBeDeleted.Result);// delete from Db
             if (response.IsSuccess)
