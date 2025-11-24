@@ -1,7 +1,4 @@
 ﻿
-
-using Ecom.DAL.Entity;
-
 namespace Ecom.DAL.Repo.Implementation
 {
     public class ProductRepo : IProductRepo

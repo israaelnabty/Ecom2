@@ -2,12 +2,12 @@ using Ecom.BLL.ModelVM.Cart;
 using Ecom.BLL.ModelVM.CartItem;
 using Ecom.BLL.ModelVM.Category;
 using Ecom.DAL.Entity;
-using Microsoft.AspNetCore.Identity; 
+using Microsoft.AspNetCore.Identity;
 using Ecom.BLL.ModelVM.Product;
 using Ecom.BLL.ModelVM.ProductReview;
 using Ecom.BLL.ModelVM.Order;
 using Ecom.BLL.ModelVM.OrderItem;
-using AutoMapper; 
+using AutoMapper;
 
 namespace Ecom.BLL.Mapper
 {
@@ -22,9 +22,7 @@ namespace Ecom.BLL.Mapper
                 .ConstructUsing(vm => new Category(vm.Name!, vm.ImageUrl!, vm.CreatedBy!));
 
             CreateMap<Category, UpdateCategoryVM>().ReverseMap();
-            
             CreateMap<Category, GetCategoryVM>().ReverseMap();
-            
             CreateMap<Category, DeleteCategoryVM>().ReverseMap();
             // ----------------------------------------
 
@@ -77,9 +75,6 @@ namespace Ecom.BLL.Mapper
             // ----------------------------------------
             // ## Product Mappings
             // ----------------------------------------
-            CreateMap<Product, GetProductVM>()
-                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null));
 
             CreateMap<CreateProductVM, Product>()
                 .ConstructUsing(vm => new Product(

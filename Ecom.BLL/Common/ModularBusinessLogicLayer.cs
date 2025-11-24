@@ -6,6 +6,7 @@ using System.Text;
 using Ecom.BLL.Mapper;
 // Note: Ensure you have the correct using statements for your specific Service classes
 
+
 namespace Ecom.BLL.Common
 {
     public static class ModularBusinessLogicLayer
@@ -60,6 +61,9 @@ namespace Ecom.BLL.Common
 
             // Resolved Conflict: Included both Order and Review services
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IProductReviewService, ProductReviewService>();
+            services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
+
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
 

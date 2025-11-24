@@ -12,3 +12,5 @@ global using Ecom.DAL.Entity;
 global using Ecom.DAL.Database;
 global using Ecom.DAL.Repo.Abstraction;
 global using Ecom.DAL.Repo.Implementation;
+
+global using System.Reflection;

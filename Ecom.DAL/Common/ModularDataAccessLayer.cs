@@ -1,8 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
-using Ecom.DAL.Entity;
-using Ecom.DAL.Repo; 
-// Note: Ensure you have the correct using statements for your specific Repo classes
 
 namespace Ecom.DAL.Common
 {
@@ -40,11 +35,10 @@ namespace Ecom.DAL.Common
             services.AddScoped<IProductRepo, ProductRepo>();
             services.AddScoped<IProductReviewRepo, ProductReviewRepo>();
 
-            // Dependency injection: When a controller or service asks for an IBrandRepo,
-            // give them a new BrandRepo instance for each HTTP request
             services.AddScoped<IBrandRepo, BrandRepo>();
             
             services.AddScoped<IOrderRepo, OrderRepo>();
+
 
             services.AddScoped<IAccountRepo, AccountRepo>();
 
