@@ -1,4 +1,6 @@
 using Ecom.BLL.Mapper;
+using FaceRecognitionDotNet;
+using Ecom.BLL.Mapper;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -68,6 +70,28 @@ namespace Ecom.BLL.Common
                 options.SaveTokens = true;
             });
 
+            // Face Recognition Service
+            // Ensure that FaceModelsPath is set in configuration
+            // Example: "FaceModelsPath": "path/to/face/models"
+            // This path should point to the directory containing the face recognition models
+            services.AddSingleton<FaceRecognition>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
+
+                // base dir = bin\Debug\net8.0
+                var baseDir = AppContext.BaseDirectory;
+                var relative = config["FaceModelsPath"] ?? "Models/FaceModels";
+                var modelsPath = Path.Combine(baseDir, relative);
+
+                if (!Directory.Exists(modelsPath))
+                {
+                    throw new DirectoryNotFoundException($"FaceModelsPath not found: {modelsPath}");
+                }
+
+                return FaceRecognition.Create(modelsPath);
+            });
+
+
             services.AddAuthorization();
 
             // Merged Services (NO DUPLICATES)
@@ -86,12 +110,14 @@ namespace Ecom.BLL.Common
             services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<ICartService, CartService>();
             
-            // services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             // Resolved Conflict: Included both Order and Review services
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
+
+            services.AddScoped<IFaceIdService, FaceIdService>();
 
             services.AddScoped<IProductReviewService, ProductReviewService>();
             services.AddScoped<IRatingCalculatorService, RatingCalculatorService>();
