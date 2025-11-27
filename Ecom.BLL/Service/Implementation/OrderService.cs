@@ -15,25 +15,16 @@ namespace Ecom.BLL.Service.Implementation
         private readonly IOrderRepo orderRepo;
         private readonly IMapper mapper;
         private readonly ICartService cartService;
+        private readonly IProductService productService;
 
-        public OrderService(IOrderRepo orderRepo,IMapper mapper, ICartService cartService)
+        public OrderService(IOrderRepo orderRepo,IMapper mapper, ICartService cartService,IProductService productService)
         {
             this.orderRepo = orderRepo;
             this.mapper = mapper;
             this.cartService = cartService;
+            this.productService = productService;
         }
-        //public async Task<ResponseResult<bool>> AddItemAsync(int orderId, CreateOrderItemVM itemVM)
-        //{
-        //    try
-        //    {
-        //        //var result = await orderRepo.AddAsync(orderId, itemVM);
-        //        return new ResponseResult<bool>(false, null, false);
-
-        //    }
-        //    catch (Exception ex) { 
-        //    return new ResponseResult<bool>(false, ex.Message, false);
-        //    }
-        //}
+        
 
         public async Task<ResponseResult<GetOrderVM>> CreateOrderAsync(string userId,string shippingAddress)
         {
@@ -49,13 +40,15 @@ namespace Ecom.BLL.Service.Implementation
                 var order = new Order(userId, DateTime.Now.AddDays(7), shippingAddress, userId, new List<OrderItem>());
                 foreach (var item in result.Result.CartItems)
                 {
+                    var ProductIdToName = await productService.GetByIdAsync(item.ProductId); // used to include the name of the product in the OrderItem Created
+                    var ProductName = ProductIdToName.Result.Title;
                     var orderItem = new OrderItem(
                         item.ProductId,
                         order.Id,               // FK
                         item.Quantity,
                         item.UnitPrice,
                         userId,
-                        item.ProductName        // snapshot title
+                        ProductName     // snapshot title From ProductService
                     );
 
                     order.AddItem(orderItem); // This recalculates total each add
@@ -90,9 +83,23 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+
                 await orderRepo.UpdateAsync(id, userId,OrderStatus.Cancelled); //Cancel Product
                 await orderRepo.SaveChangesAsync();
                 // add return Quatity to Stock when Product is Finished
+                var OrderToBeCanceled = await GetByIdAsync(id);
+                if (OrderToBeCanceled != null)
+                {
+                    foreach(var item in OrderToBeCanceled.Result.Items)
+                    {
+                        //returns Each Item in Order To Stock
+                        var OrderItemReturn = await productService.IncreaseStockAsync(item.ProductId, item.Quantity);
+                        if (OrderItemReturn.Result == false)
+                        {
+                            throw new Exception(OrderItemReturn.ErrorMessage);
+                        }
+                    }
+                }
                 return new ResponseResult<bool>(true, $"Order Cancelled Successfuly by {userId}", true);
             }
             catch (Exception ex)
@@ -149,15 +156,7 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        //public Task<ResponseResult<bool>> RemoveItemAsync(int orderId, int itemId, string userId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public Task<ResponseResult<bool>> UpdateItemQuantityAsync(int orderId, int itemId, int newQuantity, string userId)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        
 
         public async Task<ResponseResult<bool>> UpdateStatusAsync(int id, OrderStatus newStatus, string updatedBy)
         {
