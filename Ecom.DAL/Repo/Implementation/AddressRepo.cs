@@ -29,7 +29,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<Address>> GetAllByUserIdAsync(string userId,
+        public async Task<(IEnumerable<Address> Items, int TotalCount)> GetAllByUserIdAsync(string userId,
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
@@ -48,6 +48,9 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
+                // Count before pagination
+                int totalCount = await query.CountAsync();
+
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -56,7 +59,8 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                return (items, totalCount);
             }
             catch (Exception)
             {
@@ -64,7 +68,7 @@ namespace Ecom.DAL.Repo.Implementation
             }
         }
 
-        public async Task<IEnumerable<Address>> GetAllAsync(
+        public async Task<(IEnumerable<Address> Items, int TotalCount)> GetAllAsync(
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes)
@@ -83,6 +87,9 @@ namespace Ecom.DAL.Repo.Implementation
                 if (includes != null && includes.Any())
                     query = includes.Aggregate(query, (current, include) => current.Include(include));
 
+                // Count before pagination
+                int totalCount = await query.CountAsync();
+
                 // Apply pagination
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
@@ -91,7 +98,8 @@ namespace Ecom.DAL.Repo.Implementation
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize);
 
-                return await query.ToListAsync();
+                var items = await query.ToListAsync();
+                return (items, totalCount);
             }
             catch (Exception)
             {

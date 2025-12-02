@@ -6,11 +6,11 @@ namespace Ecom.DAL.Repo.Abstraction
         // Query Methods
         Task<Address?> GetByIdAsync(int id,
             params Expression<Func<Address, object>>[] includes);
-        Task<IEnumerable<Address>> GetAllByUserIdAsync(string userId,
+        Task<(IEnumerable<Address> Items, int TotalCount)> GetAllByUserIdAsync(string userId,
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes);
-        Task<IEnumerable<Address>> GetAllAsync(
+        Task<(IEnumerable<Address> Items, int TotalCount)> GetAllAsync(
             Expression<Func<Address, bool>>? filter = null,
             int pageNumber = 1, int pageSize = 10,
             params Expression<Func<Address, object>>[] includes);

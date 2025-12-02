@@ -32,50 +32,62 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
-        public async Task<ResponseResult<IEnumerable<GetAddressVM>>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<ResponseResult<PaginatedResult<GetAddressVM>>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var addresses = await _addressRepo.GetAllAsync(
+                var (addresses, totalCount) = await _addressRepo.GetAllAsync(
                     filter: a => !a.IsDeleted,
                     pageSize: pageSize,
                     pageNumber: pageNumber,
                     includes: a => a.AppUser);
 
                 if (addresses == null)
-                    return new ResponseResult<IEnumerable<GetAddressVM>>(null,
+                    return new ResponseResult<PaginatedResult<GetAddressVM>>(null,
                         "No addresses found.", false);
 
                 var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(addresses);
-                return new ResponseResult<IEnumerable<GetAddressVM>>(mappedAddresses, null, true);
+                var paginatedResult = new PaginatedResult<GetAddressVM>(
+                    mappedAddresses,
+                    totalCount,
+                    pageNumber,
+                    pageSize);
+
+                return new ResponseResult<PaginatedResult<GetAddressVM>>(paginatedResult, null, true);
             }
             catch (Exception ex)
             {
-                return new ResponseResult<IEnumerable<GetAddressVM>>(null, ex.Message, false);
+                return new ResponseResult<PaginatedResult<GetAddressVM>>(null, ex.Message, false);
             }
         }
 
-        public async Task<ResponseResult<IEnumerable<GetAddressVM>>> GetAllByUserIdAsync(string userId,
+        public async Task<ResponseResult<PaginatedResult<GetAddressVM>>> GetAllByUserIdAsync(string userId,
             int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var addresses = await _addressRepo.GetAllByUserIdAsync(
+                var (addresses, totalCount) = await _addressRepo.GetAllByUserIdAsync(
                     userId: userId,
                     filter: a => !a.IsDeleted,
                     pageSize: pageSize,
                     pageNumber: pageNumber);
 
                 if (addresses == null)
-                    return new ResponseResult<IEnumerable<GetAddressVM>>(null,
+                    return new ResponseResult<PaginatedResult<GetAddressVM>>(null,
                         "No addresses found.", false);
 
                 var mappedAddresses = _mapper.Map<IEnumerable<GetAddressVM>>(addresses);
-                return new ResponseResult<IEnumerable<GetAddressVM>>(mappedAddresses, null, true);
+                var paginatedResult = new PaginatedResult<GetAddressVM>(
+                    mappedAddresses,
+                    totalCount,
+                    pageNumber,
+                    pageSize);
+
+                return new ResponseResult<PaginatedResult<GetAddressVM>>(paginatedResult, null, true);
             }
             catch (Exception ex)
             {
-                return new ResponseResult<IEnumerable<GetAddressVM>>(null, ex.Message, false);
+                return new ResponseResult<PaginatedResult<GetAddressVM>>(null, ex.Message, false);
             }
         }
 
