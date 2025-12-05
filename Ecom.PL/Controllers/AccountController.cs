@@ -215,5 +215,21 @@ namespace Ecom.PL.Controllers
             return BadRequest(result.ErrorMessage);
         }
 
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<ActionResult<bool>> ChangePassword([FromBody] ChangePasswordVM model)
+        {
+            if (CurrentUserId == null) return Unauthorized();
+
+            var result = await _accountService.ChangePasswordAsync(CurrentUserId, model);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new { message = result.ErrorMessage });
+            }
+
+            return Ok(new { message = "Password changed successfully" });
+        }
+
     }
 }

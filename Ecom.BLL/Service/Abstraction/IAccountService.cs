@@ -39,7 +39,7 @@ namespace Ecom.BLL.Service.Abstraction
         Task<ResponseResult<bool>> SignOutAsync();
 
         // Change Password
-        //Task<ResponseResult<bool>> ChangePasswordAsync(string userId, ChangePasswordVM model);
+        Task<ResponseResult<bool>> ChangePasswordAsync(string userId, ChangePasswordVM model);
 
         // External Login
         ResponseResult<AuthenticationProperties> GetExternalLoginProperties(string provider, string returnUrl);

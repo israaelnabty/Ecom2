@@ -468,5 +468,32 @@ namespace Ecom.BLL.Service.Implementation
             }
         }
 
+        public async Task<ResponseResult<bool>> ChangePasswordAsync(string userId, ChangePasswordVM model)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return new ResponseResult<bool>(false, "User not found.", false);
+                }
+
+                // This built-in method verifies the CurrentPassword AND sets the NewPassword
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    return new ResponseResult<bool>(false, errors, false);
+                }
+
+                return new ResponseResult<bool>(true, "Password changed successfully.", true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseResult<bool>(false, ex.Message, false);
+            }
+        }
+
     }
 }
