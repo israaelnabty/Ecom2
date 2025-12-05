@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using System.Net;
 using System.Text.Json.Serialization;
+using Stripe;
 
 namespace Ecom.PL
 {
@@ -16,6 +17,7 @@ namespace Ecom.PL
         {
 
             var builder = WebApplication.CreateBuilder(args);
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
             // Add services to the container.
 
@@ -59,13 +61,15 @@ namespace Ecom.PL
                             .AllowAnyMethod()
                             .AllowCredentials()
                             .WithOrigins(allowedOrigins);
-                });
+                }); 
             });
+
 
             var app = builder.Build();
 
             //Run your seeder here
             //using (var scope = app.Services.CreateScope())
+
             //{
             //    var services = scope.ServiceProvider;
             //    try

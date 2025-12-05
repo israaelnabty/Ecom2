@@ -8,7 +8,7 @@ namespace Ecom.PL.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CartItemController : ControllerBase
+    public class CartItemController : BaseApiController
     {
         private readonly ICartItemService _service;
 

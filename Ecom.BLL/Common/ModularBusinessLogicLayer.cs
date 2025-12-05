@@ -122,7 +122,9 @@ namespace Ecom.BLL.Common
             
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentService, PaymentService>();
-            
+
+            services.AddScoped<IStripeService, StripeService>();
+
             services.AddScoped<IFaceIdService, FaceIdService>();
 
             services.AddScoped<IProductReviewService, ProductReviewService>();

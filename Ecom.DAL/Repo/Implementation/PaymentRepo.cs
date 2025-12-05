@@ -68,8 +68,8 @@ namespace Ecom.DAL.Repo.Implementation
                 {
                     return payment;
                 }
-
-                throw new KeyNotFoundException($"Payment with orderId {orderId} not found.");
+                return null;
+                //throw new KeyNotFoundException($"Payment with orderId {orderId} not found.");
             }
             catch (Exception)
             {

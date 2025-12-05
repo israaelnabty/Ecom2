@@ -20,7 +20,7 @@ namespace Ecom.PL.Controllers
         /// </summary>
         [HttpPost("create")]
         [Authorize] // Must be logged in
-        public async Task<ActionResult<Payment>> CreatePayment([FromBody] CreatePaymentVM model)
+        public async Task<ActionResult<GetPaymentVM>> CreatePayment([FromBody] CreatePaymentVM model)
         {
             if (CurrentUserId == null)
             {
@@ -104,6 +104,21 @@ namespace Ecom.PL.Controllers
             }
 
             return Ok(new { message = "Payment delete status toggled" });
+        }
+
+        [HttpPost("stripe/create-session/{orderId}")]
+        [Authorize]
+        public async Task<IActionResult> CreateStripeSession(int orderId)
+        {
+            if (CurrentUserId == null)
+                return Unauthorized();
+
+            var result = await _paymentService.CreateStripeSessionAsync(orderId, CurrentUserId);
+
+            if (!result.IsSuccess)
+                return BadRequest(new { message = result.ErrorMessage });
+
+            return Ok(new { url = result.Result });
         }
 
     }

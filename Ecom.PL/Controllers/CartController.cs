@@ -17,9 +17,10 @@ namespace Ecom.PL.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("user")]
         public async Task<IActionResult> GetByUserId()
         {
+            if (CurrentUserId == null) return Unauthorized();
             var result = await _service.GetByUserIdAsync(CurrentUserId);
 
             if (!result.IsSuccess)
