@@ -17,7 +17,7 @@ namespace Ecom.BLL.Service.Implementation
         public async Task SendAbandonedCartEmailsAsync()
         {
             // 1. Define "Abandoned": Inactive for 2 days (48 hours)
-            var cutOffTime = DateTime.UtcNow.AddDays(-2);
+            var cutOffTime = DateTime.UtcNow.AddSeconds(-2);
 
             // 2. Query Carts
             var abandonedCarts = await _context.Carts

@@ -79,6 +79,7 @@ namespace Ecom.BLL.Service.Implementation
         {
             try
             {
+                Console.WriteLine("Entered update payment service");
                 // 1. Get the payment
                 var payment = await _paymentRepo.GetByIdAsync(model.PaymentId);
                 if (payment == null)
@@ -127,6 +128,7 @@ namespace Ecom.BLL.Service.Implementation
                         {
                             return new ResponseResult<bool>(false, $"Failed to update quantity sold for product ID {item.ProductId}.", false);
                         }
+                        Console.WriteLine("Quantity sold increased");
                     }
                 }
                 // If Payment failed
@@ -275,6 +277,35 @@ namespace Ecom.BLL.Service.Implementation
 
                 if (!saved)
                     return new ResponseResult<bool>(false, "Failed to save payment changes", false);
+
+                //2. Get the associated order
+                var orderResponse = await _orderService.GetByIdAsync(payment.OrderId);
+                var order = orderResponse.Result;
+                if (order == null)
+                {
+                    return new ResponseResult<bool>(false, "Associated order not found.", false);
+                }
+
+                var updateOrderResponse = await _orderService.UpdateStatusAsync(payment.OrderId, OrderStatus.Processing, "System");
+                if (!updateOrderResponse.IsSuccess)
+                {
+                    return updateOrderResponse;
+                }
+                // Increase QuantitySold for each product in the order
+                foreach (var item in order.Items)
+                {
+                    var addQuantityVM = new AddQuantitySoldVM
+                    {
+                        ProductId = item.ProductId,
+                        QuantitySold = item.Quantity
+                    };
+                    var productUpdateResult = await _productService.AddToQuantitySoldAsync(addQuantityVM);
+                    if (!productUpdateResult.IsSuccess)
+                    {
+                        return new ResponseResult<bool>(false, $"Failed to update quantity sold for product ID {item.ProductId}.", false);
+                    }
+                    Console.WriteLine("Quantity sold increased");
+                }
 
                 return new ResponseResult<bool>(true, null, true);
             }

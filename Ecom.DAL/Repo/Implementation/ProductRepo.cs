@@ -17,7 +17,7 @@ namespace Ecom.DAL.Repo.Implementation
             Expression<Func<Product, bool>>? filter = null,
             params Expression<Func<Product, object>>[] includes)
         {
-            IQueryable<Product> query = _db.Products;
+            IQueryable<Product> query = _db.Products.Where(p => !p.IsDeleted);
 
             if (filter != null)
                 query = query.Where(filter);
@@ -36,7 +36,7 @@ namespace Ecom.DAL.Repo.Implementation
                 .Include(p => p.Category)
                 .Include(p => p.ProductImageUrls)
                 .Include(p => p.ProductReviews)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
         }
 
         // ✅ Add
