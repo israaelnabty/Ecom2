@@ -1,115 +1,109 @@
-E-Commerce API (.NET 8)
+# E-Commerce API (.NET 8)
 
 A robust, enterprise-grade E-Commerce backend API built with .NET 8 and Entity Framework Core. This project demonstrates a clean 3-Tier Architecture (PL, BLL, DAL) and integrates advanced features like Biometric Authentication (Face ID), OAuth, and Background Job processing.
 
-🚀 Features
+---
 
-🔐 Authentication & Identity
+## 🚀 Features
 
-JWT Authentication: Secure stateless authentication using JSON Web Tokens.
+### 🔐 Authentication & Identity
 
-ASP.NET Core Identity: Complete user management (Roles, Claims, Password Hashing).
+- **JWT Authentication**: Secure stateless authentication using JSON Web Tokens.
+- **ASP.NET Core Identity**: Complete user management (Roles, Claims, Password Hashing).
+- **Face ID Login**: Biometric authentication using FaceRecognitionDotNet (Dlib). Users can register their face via webcam and log in without passwords.
+- **Google OAuth**: External social login integration.
+- **Email Confirmation**: Account verification using SendGrid API.
 
-Face ID Login: Biometric authentication using FaceRecognitionDotNet (Dlib). Users can register their face via webcam and login without passwords.
+---
 
-Google OAuth: External social login integration.
+### 🛒 E-Commerce Core
 
-Email Confirmation: Account verification using SendGrid API.
+- **Product Management**: CRUD operations for Products, Brands, and Categories.
+- **Shopping Cart**: Persistent cart management stored in SQL.
+- **Order System**: Order placement, tracking, and history.
+- **Address Book**: User-specific address management with GPS coordinates.
 
-🛒 E-Commerce Core
+---
 
-Product Management: CRUD operations for Products, Brands, and Categories.
+### ⚙️ Advanced Features
 
-Shopping Cart: Persistent cart management stored in SQL.
+#### **Background Jobs (Hangfire)**
 
-Order System: Order placement, tracking, and history.
+- **Abandoned Cart Recovery**: Automatically emails users who haven't checked out in 2 days.
+- **Order Cleanup**: System tasks to maintain database health.
 
-Address Book: User-specific address management with GPS coordinates.
+#### **Automated Seeding**
 
-⚙️ Advanced Features
+- Fetches real data from dummyjson.com on first run.
+- Seeds roles, admin user, and default products.
+- Applies pending migrations automatically.
 
-Background Jobs (Hangfire):
+#### **AutoMapper**
 
-Abandoned Cart Recovery: Automatically emails users who haven't checked out in 2 days.
+- Clean mapping between Entities and DTOs/ViewModels.
 
-Order Cleanup: System tasks to maintain database health.
+---
 
-Automated Seeding: Smart database seeder that fetches real-world data from dummyjson.com to populate the database on first run.
-
-AutoMapper: Clean mapping between Entities and DTOs (ViewModels).
-
-🏗 Architecture
+## 🏗 Architecture
 
 The solution follows a Modular Monolith / 3-Tier Architecture:
 
-Ecom.DAL (Data Access Layer):
+### **Ecom.DAL (Data Access Layer)**
 
-Contains Database Context (DbContext).
+- Database Context (DbContext)
+- Domain Entities (POCOs)
+- Repositories (Generic and Specific)
+- Migrations
 
-Domain Entities (POCOs).
+### **Ecom.BLL (Business Logic Layer)**
 
-Repositories (Generic and Specific).
+- Services (AccountService, FaceIdService, etc.)
+- Business validation logic
+- DTOs / ViewModels
+- AutoMapper Profiles
+- Integrations (SendGrid, FaceRecognition)
 
-Migrations.
+### **Ecom.PL (Presentation Layer)**
 
-Ecom.BLL (Business Logic Layer):
+- ASP.NET Core Web API Controllers
+- Hangfire Dashboard configuration
+- Dependency Injection setup
 
-Services (AccountService, FaceIdService, etc.).
+---
 
-Business validation logic.
+## 🛠 Tech Stack
 
-DTOs / ViewModels.
+| Feature | Technology |
+|--------|------------|
+| Framework | .NET 8 |
+| Database | Microsoft SQL Server |
+| ORM | Entity Framework Core |
+| Authentication | JWT Bearer & Google OAuth |
+| AI/ML | FaceRecognitionDotNet (Dlib wrapper) |
+| Background Jobs | Hangfire |
+| Email | SendGrid |
+| Documentation | Swagger / OpenAPI |
 
-AutoMapper Profiles.
+---
 
-Integrations (SendGrid, FaceRecognition).
+## 🚀 Getting Started
 
-Ecom.PL (Presentation Layer):
+### **Prerequisites**
 
-ASP.NET Core Web API Controllers.
+- .NET 8 SDK  
+- SQL Server (Express or Developer)  
+- Visual Studio 2022 / VS Code  
 
-Hangfire Dashboard configuration.
+---
 
-Dependency Injection setup.
+### **1. Clone the Repository**
 
-🛠 Tech Stack
-
-Framework: .NET 8
-
-Database: Microsoft SQL Server
-
-ORM: Entity Framework Core
-
-Auth: JWT Bearer & Google OAuth 2.0
-
-AI/ML: FaceRecognitionDotNet (Dlib wrapper)
-
-Background Jobs: Hangfire
-
-Email: SendGrid
-
-Documentation: Swagger / OpenAPI
-
-🚀 Getting Started
-
-Prerequisites
-
-.NET 8 SDK
-
-SQL Server (Express or Developer)
-
-Visual Studio 2022 or VS Code
-
-1. Clone the Repository
-
-git clone [https://github.com/YourUsername/Ecom-Backend.git](https://github.com/YourUsername/Ecom-Backend.git)
-cd Ecom-Backend
-
+```bash
 
 2. Configure appsettings.json
 
-Navigate to Ecom.PL and update appsettings.Development.json with your local configurations.
-
+Navigate to Ecom.PL and update the settings:
+```
 {
   "ConnectionStrings": {
     "defaultConnection": "Server=.;Database=EcomDB;Trusted_Connection=True;TrustServerCertificate=True;"
@@ -132,54 +126,37 @@ Navigate to Ecom.PL and update appsettings.Development.json with your local conf
   },
   "ClientUrl": "http://localhost:4200"
 }
-
+```
 
 3. Run the Application
 
-You do not need to manually run migrations. The application includes a DbSeeder that runs automatically on startup to:
+No manual migrations required.
+The built-in DbSeeder will:
 
-Apply pending migrations.
+Apply migrations
 
-Create the Database.
+Create the Database
 
-Seed Admin and Customer roles.
+Seed Admin & Customer roles
 
-Fetch and seed products from the external API.
+Fetch and seed products
 
 cd Ecom.PL
 dotnet run
 
-
 4. Access the API
+Tool	URL
+Swagger UI	https://localhost:7123/swagger
 
-Swagger UI: https://localhost:7123/swagger
-
-Hangfire Dashboard: https://localhost:7123/hangfire
-
+Hangfire Dashboard	https://localhost:7123/hangfire
 👤 Default Users (Seeded)
-
-The system seeds the following users for testing:
-
-Role
-
-Email
-
-Password
-
-Admin
-
-admin@ecom.com
-
-P@ssword123
-
-Reviewer
-
-reviewer@ecom.com
-
-P@ssword123
-
+Role	Email	Password
+Admin	admin@ecom.com
+	P@ssword123
+Reviewer	reviewer@ecom.com
+	P@ssword123
 📦 Face ID Setup Notes
 
-This project uses FaceRecognitionDotNet.
-
-Ensure your server has the Visual C++ Redistributable
+This project uses FaceRecognitionDotNet, which depends on native Dlib binaries.
+git clone https://github.com/YourUsername/Ecom-Backend.git
+cd Ecom-Backend
